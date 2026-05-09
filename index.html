@@ -1002,4 +1002,101 @@ document.addEventListener('DOMContentLoaded', function() {
         tbody.innerHTML = '';
         
         var jumlahLulus = 0;
-       
+        var jumlahCadangan = 0;
+        var jumlahTidakLulus = 0;
+        
+        if (dataPendaftar.length === 0) {
+            tbody.innerHTML = '<tr><td colspan="11"><div class="empty-state"><i class="fas fa-inbox"></i><p>Belum ada data pendaftar</p></div></td></tr>';
+        }
+        
+        for (var i = 0; i < dataPendaftar.length; i++) {
+            var d = dataPendaftar[i];
+            var tr = document.createElement('tr');
+            
+            var statusClass = '';
+            if (d.ket === 'Lulus') statusClass = 'status-lulus';
+            else if (d.ket === 'Cadangan') statusClass = 'status-cadangan';
+            else statusClass = 'status-tidak-lulus';
+            
+            // Badge gedung berdasarkan kode tempat
+            var gedungBadgeClass = '';
+            var gedungIcon = '';
+            if (d.kodeTempat === 'A') {
+                gedungBadgeClass = 'a';
+                gedungIcon = '🏢';
+            } else if (d.kodeTempat === 'B') {
+                gedungBadgeClass = 'b';
+                gedungIcon = '🏫';
+            } else if (d.kodeTempat === 'V') {
+                gedungBadgeClass = 'v';
+                gedungIcon = '🏗️';
+            }
+            
+            tr.innerHTML = 
+                '<td><strong style="color: var(--primary);">' + d.kode + '</strong></td>' +
+                '<td>' + d.nama + '</td>' +
+                '<td>' + d.ttl + '</td>' +
+                '<td>' + d.jk + '</td>' +
+                '<td>' + d.pekerjaanOrtu + '</td>' +
+                '<td><span class="gedung-badge ' + gedungBadgeClass + '">' + gedungIcon + ' ' + d.tempatTes + '</span></td>' +
+                '<td>' + d.mat + '</td>' +
+                '<td>' + d.inggris + '</td>' +
+                '<td>' + d.umum + '</td>' +
+                '<td><strong>' + d.rata.toFixed(2) + '</strong></td>' +
+                '<td><span class="status-badge ' + statusClass + '">' + d.ket + '</span></td>';
+            
+            tbody.appendChild(tr);
+            
+            if (d.ket === 'Lulus') jumlahLulus++;
+            else if (d.ket === 'Cadangan') jumlahCadangan++;
+            else jumlahTidakLulus++;
+        }
+        
+        document.getElementById('statTotal').textContent = dataPendaftar.length;
+        document.getElementById('statLulus').textContent = jumlahLulus;
+        document.getElementById('statCadangan').textContent = jumlahCadangan;
+        document.getElementById('statTidakLulus').textContent = jumlahTidakLulus;
+        document.getElementById('badgeJumlah').textContent = dataPendaftar.length + ' Data';
+    }
+    
+    function resetFormInput() {
+        document.getElementById('nama').value = '';
+        document.getElementById('tempatLahir').value = '';
+        document.getElementById('tanggalLahir').value = '';
+        document.getElementById('pekerjaanOrtu').value = '';
+        document.getElementById('tempatTes').value = '';
+        document.getElementById('gelombang').value = '';
+        document.getElementById('nilaiMat').value = '';
+        document.getElementById('nilaiInggris').value = '';
+        document.getElementById('nilaiUmum').value = '';
+        
+        var radios = document.getElementsByName('jk');
+        for (var i = 0; i < radios.length; i++) {
+            radios[i].checked = false;
+        }
+    }
+    
+    function resetAll() {
+        resetFormInput();
+        document.getElementById('kodePendaftaran').value = '';
+    }
+    
+    btnSimpan.addEventListener('click', simpanData);
+    btnReset.addEventListener('click', resetAll);
+    
+    // Add shake animation
+    var style = document.createElement('style');
+    style.textContent = `
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-10px); }
+            50% { transform: translateX(10px); }
+            75% { transform: translateX(-10px); }
+        }
+    `;
+    document.head.appendChild(style);
+});
+</script>
+
+</body>
+</html>
