@@ -1,0 +1,973 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pendaftaran Mahasiswa Baru | Universitas Pamulang</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #4f46e5;
+            --primary-dark: #3730a3;
+            --secondary: #06b6d4;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --dark: #1e293b;
+            --light: #f8fafc;
+            --gray: #64748b;
+            --border: #e2e8f0;
+            --shadow: 0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -2px rgba(0,0,0,0.1);
+            --shadow-lg: 0 10px 15px -3px rgba(0,0,0,0.1), 0 4px 6px -4px rgba(0,0,0,0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', 'Segoe UI', Tahoma, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        /* Animated background */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 20% 50%, rgba(255,255,255,0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(255,255,255,0.1) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .particle {
+            position: absolute;
+            background: rgba(255,255,255,0.2);
+            border-radius: 50%;
+            animation: float 15s infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            33% { transform: translateY(-20px) rotate(10deg); }
+            66% { transform: translateY(20px) rotate(-10deg); }
+        }
+
+        .container {
+            max-width: 1300px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Header Card */
+        .header-card {
+            background: white;
+            border-radius: 20px;
+            padding: 30px 40px;
+            margin-bottom: 25px;
+            box-shadow: var(--shadow-lg);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: linear-gradient(90deg, var(--primary), var(--secondary), var(--success));
+        }
+
+        .header-content {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .header-icon {
+            width: 70px;
+            height: 70px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            border-radius: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 32px;
+            color: white;
+            box-shadow: 0 10px 20px rgba(79, 70, 229, 0.3);
+        }
+
+        .header-text h1 {
+            font-size: 28px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 5px;
+        }
+
+        .header-text p {
+            color: var(--gray);
+            font-size: 14px;
+        }
+
+        .header-badge {
+            background: linear-gradient(135deg, var(--success), #059669);
+            color: white;
+            padding: 8px 20px;
+            border-radius: 50px;
+            font-size: 14px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        /* Stats Bar */
+        .stats-bar {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        .stat-card {
+            background: white;
+            border-radius: 16px;
+            padding: 20px;
+            box-shadow: var(--shadow);
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            transition: transform 0.3s, box-shadow 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .stat-card::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle, rgba(255,255,255,0.3) 0%, transparent 70%);
+            border-radius: 50%;
+        }
+
+        .stat-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+            color: white;
+        }
+
+        .stat-icon.blue { background: linear-gradient(135deg, #3b82f6, #2563eb); }
+        .stat-icon.green { background: linear-gradient(135deg, #10b981, #059669); }
+        .stat-icon.red { background: linear-gradient(135deg, #ef4444, #dc2626); }
+        .stat-icon.orange { background: linear-gradient(135deg, #f59e0b, #d97706); }
+
+        .stat-info {
+            position: relative;
+            z-index: 1;
+        }
+
+        .stat-value {
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--dark);
+        }
+
+        .stat-label {
+            font-size: 12px;
+            color: var(--gray);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        /* Main Form Card */
+        .form-card {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 25px;
+            box-shadow: var(--shadow-lg);
+        }
+
+        .form-card-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid var(--border);
+        }
+
+        .form-card-header i {
+            font-size: 24px;
+            color: var(--primary);
+        }
+
+        .form-card-header h2 {
+            font-size: 20px;
+            color: var(--dark);
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 5px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            font-size: 13px;
+            color: var(--dark);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .form-group label i {
+            color: var(--primary);
+            margin-right: 6px;
+            width: 16px;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid var(--border);
+            border-radius: 12px;
+            font-size: 14px;
+            transition: all 0.3s;
+            background: var(--light);
+            color: var(--dark);
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+            background: white;
+        }
+
+        .form-control[readonly] {
+            background: linear-gradient(135deg, #f0f9ff, #e0f2fe);
+            border-color: #93c5fd;
+            color: var(--primary-dark);
+            font-weight: 700;
+            font-size: 16px;
+            letter-spacing: 1px;
+        }
+
+        .radio-group {
+            display: flex;
+            gap: 20px;
+        }
+
+        .radio-option {
+            position: relative;
+            cursor: pointer;
+        }
+
+        .radio-option input {
+            display: none;
+        }
+
+        .radio-label {
+            padding: 12px 24px;
+            border: 2px solid var(--border);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s;
+            font-weight: 500;
+        }
+
+        .radio-option input:checked + .radio-label {
+            border-color: var(--primary);
+            background: linear-gradient(135deg, #eef2ff, #e0e7ff);
+            color: var(--primary);
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 12px;
+            margin-top: 25px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 12px 32px;
+            border: none;
+            border-radius: 12px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .btn-save {
+            background: linear-gradient(135deg, var(--success), #059669);
+            color: white;
+            box-shadow: 0 4px 15px rgba(16, 185, 129, 0.4);
+        }
+
+        .btn-save:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(16, 185, 129, 0.5);
+        }
+
+        .btn-reset {
+            background: linear-gradient(135deg, #f59e0b, #d97706);
+            color: white;
+            box-shadow: 0 4px 15px rgba(245, 158, 11, 0.4);
+        }
+
+        .btn-reset:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(245, 158, 11, 0.5);
+        }
+
+        /* Table Card */
+        .table-card {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: var(--shadow-lg);
+            overflow: hidden;
+        }
+
+        .table-card-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .table-card-header h2 {
+            font-size: 20px;
+            color: var(--dark);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .badge {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 5px 15px;
+            border-radius: 50px;
+            font-size: 14px;
+        }
+
+        .table-wrapper {
+            overflow-x: auto;
+            border-radius: 12px;
+            border: 2px solid var(--border);
+        }
+
+        table {
+            width: 100%;
+            min-width: 1200px;
+            border-collapse: collapse;
+        }
+
+        thead th {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+            padding: 14px 12px;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-weight: 600;
+            white-space: nowrap;
+        }
+
+        tbody td {
+            padding: 12px;
+            text-align: center;
+            border-bottom: 1px solid var(--border);
+            font-size: 13px;
+            color: var(--dark);
+        }
+
+        tbody tr {
+            transition: all 0.3s;
+        }
+
+        tbody tr:hover {
+            background: #f0f9ff;
+            transform: scale(1.01);
+        }
+
+        tbody tr:nth-child(even) {
+            background: #fafafa;
+        }
+
+        tbody tr:nth-child(even):hover {
+            background: #f0f9ff;
+        }
+
+        .status-badge {
+            padding: 6px 16px;
+            border-radius: 50px;
+            font-weight: 700;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            display: inline-block;
+        }
+
+        .status-lulus {
+            background: linear-gradient(135deg, #d1fae5, #a7f3d0);
+            color: #065f46;
+        }
+
+        .status-cadangan {
+            background: linear-gradient(135deg, #fef3c7, #fde68a);
+            color: #92400e;
+        }
+
+        .status-tidak-lulus {
+            background: linear-gradient(135deg, #fee2e2, #fecaca);
+            color: #991b1b;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #999;
+        }
+
+        .empty-state i {
+            font-size: 48px;
+            margin-bottom: 15px;
+            opacity: 0.5;
+        }
+
+        /* Toast */
+        .toast {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: white;
+            border-radius: 12px;
+            padding: 16px 24px;
+            box-shadow: var(--shadow-lg);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            transform: translateX(400px);
+            transition: transform 0.5s;
+            z-index: 1000;
+            border-left: 4px solid var(--success);
+        }
+
+        .toast.show {
+            transform: translateX(0);
+        }
+
+        .toast i {
+            font-size: 24px;
+            color: var(--success);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                text-align: center;
+            }
+            .header-left {
+                flex-direction: column;
+            }
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+            .stats-bar {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .btn {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<!-- Animated Particles -->
+<div class="particles" id="particles"></div>
+
+<!-- Toast Notification -->
+<div class="toast" id="toast">
+    <i class="fas fa-check-circle"></i>
+    <div>
+        <strong>Berhasil!</strong>
+        <p id="toastMsg">Data berhasil disimpan</p>
+    </div>
+</div>
+
+<div class="container">
+    <!-- Header -->
+    <div class="header-card">
+        <div class="header-content">
+            <div class="header-left">
+                <div class="header-icon">
+                    <i class="fas fa-graduation-cap"></i>
+                </div>
+                <div class="header-text">
+                    <h1>Pendaftaran Mahasiswa Baru</h1>
+                    <p>Universitas Pamulang • Fakultas Ilmu Komputer • Teknik Informatika S-1</p>
+                </div>
+            </div>
+            <div class="header-badge">
+                <i class="fas fa-calendar-alt"></i>
+                T.A 2025/2026 Genap
+            </div>
+        </div>
+    </div>
+
+    <!-- Stats -->
+    <div class="stats-bar">
+        <div class="stat-card">
+            <div class="stat-icon blue">
+                <i class="fas fa-users"></i>
+            </div>
+            <div class="stat-info">
+                <div class="stat-value" id="statTotal">0</div>
+                <div class="stat-label">Total Pendaftar</div>
+            </div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-icon green">
+                <i class="fas fa-check-circle"></i>
+            </div>
+            <div class="stat-info">
+                <div class="stat-value" id="statLulus">0</div>
+                <div class="stat-label">Lulus</div>
+            </div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-icon orange">
+                <i class="fas fa-clock"></i>
+            </div>
+            <div class="stat-info">
+                <div class="stat-value" id="statCadangan">0</div>
+                <div class="stat-label">Cadangan</div>
+            </div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-icon red">
+                <i class="fas fa-times-circle"></i>
+            </div>
+            <div class="stat-info">
+                <div class="stat-value" id="statTidakLulus">0</div>
+                <div class="stat-label">Tidak Lulus</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Form -->
+    <div class="form-card">
+        <div class="form-card-header">
+            <i class="fas fa-edit"></i>
+            <h2>Form Input Pendaftaran</h2>
+        </div>
+        
+        <form id="formDaftar" onsubmit="return false;">
+            <div class="form-grid">
+                <div class="form-group">
+                    <label><i class="fas fa-qrcode"></i> Kode Pendaftaran</label>
+                    <input type="text" class="form-control" id="kodePendaftaran" placeholder="Auto-generated" readonly>
+                </div>
+                
+                <div class="form-group">
+                    <label><i class="fas fa-user"></i> Nama Pendaftar</label>
+                    <input type="text" class="form-control" id="nama" placeholder="Masukkan nama lengkap">
+                </div>
+                
+                <div class="form-group">
+                    <label><i class="fas fa-venus-mars"></i> Jenis Kelamin</label>
+                    <div class="radio-group">
+                        <label class="radio-option">
+                            <input type="radio" name="jk" value="Laki-laki">
+                            <span class="radio-label">
+                                <i class="fas fa-male"></i> Laki-laki
+                            </span>
+                        </label>
+                        <label class="radio-option">
+                            <input type="radio" name="jk" value="Perempuan">
+                            <span class="radio-label">
+                                <i class="fas fa-female"></i> Perempuan
+                            </span>
+                        </label>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label><i class="fas fa-map-marker-alt"></i> Tempat Lahir</label>
+                    <input type="text" class="form-control" id="tempatLahir" placeholder="Kota tempat lahir">
+                </div>
+                
+                <div class="form-group">
+                    <label><i class="fas fa-calendar"></i> Tanggal Lahir</label>
+                    <input type="date" class="form-control" id="tanggalLahir">
+                </div>
+                
+                <div class="form-group">
+                    <label><i class="fas fa-briefcase"></i> Pekerjaan Orang Tua</label>
+                    <input type="text" class="form-control" id="pekerjaanOrtu" placeholder="Pekerjaan orang tua">
+                </div>
+                
+                <div class="form-group" style="grid-column: 1/-1;">
+                    <label style="font-size:15px; color: var(--primary);"><i class="fas fa-star"></i> Nilai Tes</label>
+                </div>
+                
+                <div class="form-group">
+                    <label><i class="fas fa-calculator"></i> Matematika</label>
+                    <input type="number" class="form-control" id="nilaiMat" min="0" max="100" placeholder="0 - 100">
+                </div>
+                
+                <div class="form-group">
+                    <label><i class="fas fa-language"></i> Bahasa Inggris</label>
+                    <input type="number" class="form-control" id="nilaiInggris" min="0" max="100" placeholder="0 - 100">
+                </div>
+                
+                <div class="form-group">
+                    <label><i class="fas fa-globe"></i> Pengetahuan Umum</label>
+                    <input type="number" class="form-control" id="nilaiUmum" min="0" max="100" placeholder="0 - 100">
+                </div>
+                
+                <div class="form-group">
+                    <label><i class="fas fa-building"></i> Tempat Tes</label>
+                    <select class="form-control" id="tempatTes">
+                        <option value="">-- Pilih Tempat Tes --</option>
+                        <option value="A">A - Gedung A</option>
+                        <option value="B">B - Gedung B</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label><i class="fas fa-layer-group"></i> Gelombang</label>
+                    <select class="form-control" id="gelombang">
+                        <option value="">-- Pilih Gelombang --</option>
+                        <option value="1">Gelombang 1</option>
+                        <option value="2">Gelombang 2</option>
+                        <option value="3">Gelombang 3</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div class="btn-group">
+                <button type="button" id="btnSimpan" class="btn btn-save">
+                    <i class="fas fa-save"></i> Simpan Data
+                </button>
+                <button type="button" id="btnReset" class="btn btn-reset">
+                    <i class="fas fa-undo"></i> Reset Form
+                </button>
+            </div>
+        </form>
+    </div>
+
+    <!-- Table -->
+    <div class="table-card">
+        <div class="table-card-header">
+            <h2>
+                <i class="fas fa-table"></i> 
+                Tabel Data Pendaftar
+                <span class="badge" id="badgeJumlah">0 Data</span>
+            </h2>
+        </div>
+        
+        <div class="table-wrapper">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Kode Pendaftaran</th>
+                        <th>Nama Pendaftar</th>
+                        <th>Tempat, Tgl Lahir</th>
+                        <th>JK</th>
+                        <th>Pekerjaan Ortu</th>
+                        <th>Tempat Tes</th>
+                        <th>Mat</th>
+                        <th>B. Inggris</th>
+                        <th>Umum</th>
+                        <th>Rata-rata</th>
+                        <th>Keterangan</th>
+                    </tr>
+                </thead>
+                <tbody id="bodyTabel">
+                    <tr>
+                        <td colspan="11">
+                            <div class="empty-state">
+                                <i class="fas fa-inbox"></i>
+                                <p>Belum ada data pendaftar</p>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    
+    // Create floating particles
+    const particlesContainer = document.getElementById('particles');
+    for (let i = 0; i < 20; i++) {
+        const particle = document.createElement('div');
+        particle.classList.add('particle');
+        const size = Math.random() * 8 + 4;
+        particle.style.width = size + 'px';
+        particle.style.height = size + 'px';
+        particle.style.left = Math.random() * 100 + '%';
+        particle.style.top = Math.random() * 100 + '%';
+        particle.style.animationDelay = Math.random() * 15 + 's';
+        particle.style.animationDuration = Math.random() * 20 + 10 + 's';
+        particlesContainer.appendChild(particle);
+    }
+    
+    var dataPendaftar = [];
+    var counterUrut = 100;
+    
+    var btnSimpan = document.getElementById('btnSimpan');
+    var btnReset = document.getElementById('btnReset');
+    
+    function showToast(message) {
+        var toast = document.getElementById('toast');
+        document.getElementById('toastMsg').textContent = message;
+        toast.classList.add('show');
+        setTimeout(function() {
+            toast.classList.remove('show');
+        }, 3000);
+    }
+    
+    function simpanData() {
+        var nama = document.getElementById('nama').value.trim();
+        var tempatLahir = document.getElementById('tempatLahir').value.trim();
+        var tanggalLahir = document.getElementById('tanggalLahir').value;
+        var pekerjaanOrtu = document.getElementById('pekerjaanOrtu').value.trim();
+        var tempatTes = document.getElementById('tempatTes').value;
+        var gelombang = document.getElementById('gelombang').value;
+        var nilaiMat = document.getElementById('nilaiMat').value;
+        var nilaiInggris = document.getElementById('nilaiInggris').value;
+        var nilaiUmum = document.getElementById('nilaiUmum').value;
+        
+        var jkRadio = document.querySelector('input[name="jk"]:checked');
+        
+        // Validasi dengan animasi shake
+        function shakeField(id) {
+            var el = document.getElementById(id);
+            el.style.animation = 'none';
+            el.offsetHeight;
+            el.style.animation = 'shake 0.5s';
+            el.style.borderColor = 'var(--danger)';
+            setTimeout(() => { el.style.borderColor = 'var(--border)'; }, 500);
+        }
+        
+        if (!nama) { shakeField('nama'); alert('⚠️ NAMA PENDAFTAR harus diisi!'); return; }
+        if (!jkRadio) { alert('⚠️ JENIS KELAMIN harus dipilih!'); return; }
+        if (!tempatLahir) { shakeField('tempatLahir'); alert('⚠️ TEMPAT LAHIR harus diisi!'); return; }
+        if (!tanggalLahir) { shakeField('tanggalLahir'); alert('⚠️ TANGGAL LAHIR harus diisi!'); return; }
+        if (!pekerjaanOrtu) { shakeField('pekerjaanOrtu'); alert('⚠️ PEKERJAAN ORANG TUA harus diisi!'); return; }
+        if (!tempatTes) { alert('⚠️ TEMPAT TES harus dipilih!'); return; }
+        if (!gelombang) { alert('⚠️ GELOMBANG harus dipilih!'); return; }
+        if (!nilaiMat || nilaiMat < 0 || nilaiMat > 100) { shakeField('nilaiMat'); alert('⚠️ NILAI MATEMATIKA harus diisi (0-100)!'); return; }
+        if (!nilaiInggris || nilaiInggris < 0 || nilaiInggris > 100) { shakeField('nilaiInggris'); alert('⚠️ NILAI BAHASA INGGRIS harus diisi (0-100)!'); return; }
+        if (!nilaiUmum || nilaiUmum < 0 || nilaiUmum > 100) { shakeField('nilaiUmum'); alert('⚠️ NILAI PENGETAHUAN UMUM harus diisi (0-100)!'); return; }
+        
+        var jenisKelamin = jkRadio.value;
+        var mat = parseInt(nilaiMat);
+        var inggris = parseInt(nilaiInggris);
+        var umum = parseInt(nilaiUmum);
+        
+        var tgl = new Date(tanggalLahir);
+        var bulan = tgl.getMonth() + 1;
+        
+        var noUrut = counterUrut++;
+        var kodePendaftaran = tempatTes + gelombang + "-" + noUrut + "-" + bulan;
+        
+        document.getElementById('kodePendaftaran').value = kodePendaftaran;
+        
+        var hari = tgl.getDate().toString().padStart(2, '0');
+        var bulanStr = tgl.toLocaleString('id-ID', { month: 'long' });
+        var tahun = tgl.getFullYear();
+        var ttl = tempatLahir + ", " + hari + " " + bulanStr + " " + tahun;
+        
+        var namaGedung = tempatTes === 'A' ? 'Gedung A' : 'Gedung B';
+        
+        var rataRata = (mat + inggris + umum) / 3;
+        
+        var keterangan = '';
+        if (rataRata >= 70) keterangan = 'Lulus';
+        else if (rataRata >= 60) keterangan = 'Cadangan';
+        else keterangan = 'Tidak Lulus';
+        
+        dataPendaftar.push({
+            kode: kodePendaftaran,
+            nama: nama,
+            ttl: ttl,
+            jk: jenisKelamin,
+            pekerjaanOrtu: pekerjaanOrtu,
+            tempatTes: namaGedung,
+            mat: mat,
+            inggris: inggris,
+            umum: umum,
+            rata: rataRata,
+            ket: keterangan
+        });
+        
+        renderTabel();
+        resetFormInput();
+        
+        showToast('Data berhasil disimpan! Kode: ' + kodePendaftaran);
+    }
+    
+    function renderTabel() {
+        var tbody = document.getElementById('bodyTabel');
+        tbody.innerHTML = '';
+        
+        var jumlahLulus = 0;
+        var jumlahCadangan = 0;
+        var jumlahTidakLulus = 0;
+        
+        if (dataPendaftar.length === 0) {
+            tbody.innerHTML = '<tr><td colspan="11"><div class="empty-state"><i class="fas fa-inbox"></i><p>Belum ada data pendaftar</p></div></td></tr>';
+        }
+        
+        for (var i = 0; i < dataPendaftar.length; i++) {
+            var d = dataPendaftar[i];
+            var tr = document.createElement('tr');
+            
+            var statusClass = '';
+            if (d.ket === 'Lulus') statusClass = 'status-lulus';
+            else if (d.ket === 'Cadangan') statusClass = 'status-cadangan';
+            else statusClass = 'status-tidak-lulus';
+            
+            tr.innerHTML = 
+                '<td><strong style="color: var(--primary);">' + d.kode + '</strong></td>' +
+                '<td>' + d.nama + '</td>' +
+                '<td>' + d.ttl + '</td>' +
+                '<td>' + d.jk + '</td>' +
+                '<td>' + d.pekerjaanOrtu + '</td>' +
+                '<td><span style="background: #e0e7ff; padding: 4px 12px; border-radius: 50px; color: var(--primary); font-weight:600;">' + d.tempatTes + '</span></td>' +
+                '<td>' + d.mat + '</td>' +
+                '<td>' + d.inggris + '</td>' +
+                '<td>' + d.umum + '</td>' +
+                '<td><strong>' + d.rata.toFixed(2) + '</strong></td>' +
+                '<td><span class="status-badge ' + statusClass + '">' + d.ket + '</span></td>';
+            
+            tbody.appendChild(tr);
+            
+            if (d.ket === 'Lulus') jumlahLulus++;
+            else if (d.ket === 'Cadangan') jumlahCadangan++;
+            else jumlahTidakLulus++;
+        }
+        
+        document.getElementById('statTotal').textContent = dataPendaftar.length;
+        document.getElementById('statLulus').textContent = jumlahLulus;
+        document.getElementById('statCadangan').textContent = jumlahCadangan;
+        document.getElementById('statTidakLulus').textContent = jumlahTidakLulus;
+        document.getElementById('badgeJumlah').textContent = dataPendaftar.length + ' Data';
+    }
+    
+    function resetFormInput() {
+        document.getElementById('nama').value = '';
+        document.getElementById('tempatLahir').value = '';
+        document.getElementById('tanggalLahir').value = '';
+        document.getElementById('pekerjaanOrtu').value = '';
+        document.getElementById('tempatTes').value = '';
+        document.getElementById('gelombang').value = '';
+        document.getElementById('nilaiMat').value = '';
+        document.getElementById('nilaiInggris').value = '';
+        document.getElementById('nilaiUmum').value = '';
+        
+        var radios = document.getElementsByName('jk');
+        for (var i = 0; i < radios.length; i++) {
+            radios[i].checked = false;
+        }
+    }
+    
+    function resetAll() {
+        resetFormInput();
+        document.getElementById('kodePendaftaran').value = '';
+    }
+    
+    btnSimpan.addEventListener('click', simpanData);
+    btnReset.addEventListener('click', resetAll);
+    
+    // Add shake animation
+    var style = document.createElement('style');
+    style.textContent = `
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-10px); }
+            50% { transform: translateX(10px); }
+            75% { transform: translateX(-10px); }
+        }
+    `;
+    document.head.appendChild(style);
+});
+</script>
+
+</body>
+</html>
